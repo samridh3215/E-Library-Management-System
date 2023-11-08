@@ -13,10 +13,10 @@ router.get('/', (req, res)=>{
 })
 
 router.get('/dueAmount', (req, res)=>{
-    let q = `SELECT * FROM borrow_request where  student_srn='pes2ug21cs468';`
+    let q = `SELECT * FROM borrow_request where  student_srn='${user['ID']}';`
     connection.query(q, (err1, result1, field)=>{
         if(!err1){
-            connection.query(`select sum(amount) as due from balance where student_srn = 'pes2ug21cs468'`, (err2, result2, field)=>{
+            connection.query(`select sum(amount) as due from balance where student_srn = '${user['ID']}'`, (err2, result2, field)=>{
                 if(!err2){
                     console.log(result2)
                     res.render('student/dueAmount', {amount:result2, history:returnTable(['request_id', 'date_of_request', 'duration', 'book_isbn'], result1, true, [], ['approved', 'returned'])})
@@ -48,17 +48,15 @@ router.get('/resourcePage', (req, res)=>{
 
 router.post('/updateBorrow', (req, res) => {
     const data = req.body.data;
+    const user = JSON.parse(req.body['userInfo'])
     const keys = Object.keys(data);
-
     keys.forEach(key => {
         if (data[key] >= 1) {
-            const values = `(NOW(), ${data[key]}, '${key}', 'pes2ug21cs468')`;
+            const values = `(NOW(), ${data[key]}, '${key}', '${user['ID']}')`;
             const q = `INSERT INTO borrow_request (date_of_request, duration, book_isbn, student_srn) values ${values}`;
             const updateBook = `UPDATE book set quantity = quantity-1 where isbn = '${key}'`;
             const balanceAmount = Math.ceil(data[key] / 7) * pricePerWeek;
-
-            const balanceQuery = `INSERT INTO balance (amount, student_srn) VALUES (${balanceAmount}, 'pes2ug21cs468') ON DUPLICATE KEY UPDATE amount = ${balanceAmount}`;
-            
+            const balanceQuery = `INSERT INTO balance (amount, student_srn) VALUES (${balanceAmount}, '${user['ID']}') ON DUPLICATE KEY UPDATE amount = ${balanceAmount}`;
             connection.query(updateBook, (bookErr, bookResult) => {
                 if (!bookErr) {
                     connection.query(q, (borrowErr, borrowResult) => {

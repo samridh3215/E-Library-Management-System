@@ -1,1 +1,3 @@
-- Add SRN, staffid name in userData (hardcoded in student.js and admin.js)
+- ~~Add SRN, staffid name in userData (hardcoded in student.js and admin.js)~~
+- add research paper and resources
+- Creation of account

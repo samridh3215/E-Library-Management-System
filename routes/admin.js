@@ -60,7 +60,7 @@ router.post('/manageRequest', (req, res)=>{
 
 router.post('/updateRequest', (req, res) => {
     const data = req.body.data;
-    const userInfo = req.body.userInfo;
+    const userInfo = JSON.parse(req.body['userInfo']);
 
     const updateQueries = [];
     const date = new Date(); 
@@ -70,7 +70,7 @@ router.post('/updateRequest', (req, res) => {
         let updateBookQuantity = false;
 
         if (entry['approved'] == 1) {
-            updateQuery += `approved = ${entry['approved']}, returned = ${entry['returned']}, date_of_approval = NOW(), approved_by = 'staff1' `;
+            updateQuery += `approved = ${entry['approved']}, returned = ${entry['returned']}, date_of_approval = NOW(), approved_by = '${userInfo['ID']}' `;
         }
         else{
             updateQuery += `approved = ${entry['approved']}, returned = ${entry['returned']}, date_of_approval = null, approved_by = null `;

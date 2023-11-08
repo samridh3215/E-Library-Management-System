@@ -9,11 +9,12 @@ const connection = require('../sql-connection')
 router.post('/createUser', (req, res)=>{})
 
 router.post('/addBook', (req, res)=>{
+    console.log(req.body)
     let q = `INSERT INTO book (isbn, title, author, edition, quantity, subject, status, price) values ('${req.body.isbn}','${req.body.title}','${req.body.author}','${req.body.edition}','${req.body.quantity}','${req.body.subject}','${req.body.status}','${req.body.price}')`
     try{
     connection.query(q, (err, results, fields)=>{
         console.log({q:q, "result":results, "error":err})
-        res.send({"data": results})
+        res.send("SUCCESS")
     })
     }catch{
         res.errored()
@@ -32,7 +33,13 @@ router.get('/logs', (req, res)=>{
 })
 
 router.get('/addBook', (req, res)=>{
-    res.render('admin/addBook', {})
+    connection.query('select * from book', (err, result, fields)=>{
+        if(err)
+            res.send(err.sqlMessage)
+        else
+            res.render('admin/addBook', {data:returnTable(['isbn', 'title', 'author', 'edition' ,'subject', 'price'], result, checkBbox=true, extraFields=false, boolHeader=['status'])})
+            
+    })
 })
 
 router.get('/manageRequest', (req, res)=>{
@@ -108,17 +115,19 @@ router.get('/viewBalance', (req, res)=>{
 
 router.get('/addPaper', (req, res)=>{
     let q = `select * from research_paper;`
-    connection.query(q, (err, result)=>{
+    connection.query(q, (err, result, fields)=>{
         if(err)
             res.send(err.sqlMessage)
         else
             res.render('admin/addPaper', {data: returnTable(['paper_id', 'name', 'author', 'upload_date', 'uploaded_by'], result, false, [], [])})
     })
-    res.render('admin/addPaper')
 })
 
-router.post('/addPaper', (req, res)=>{
-    
+router.post('/addPapers', (req, res)=>{
+    console.log(req.body)
+    let name = req.body.name
+    let author = req.body.author
+    let q = `insert into research_paper`
 })
 
 router.get('/addAccount', (req, res)=>{})

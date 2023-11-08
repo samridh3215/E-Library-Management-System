@@ -4,59 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="./table.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body>
+
+
+
+<table class="minimalistBlack">
+    <%- data %>
+</table>
+
 <div class="rendered-form">
     <div class="formbuilder-number form-group field-number-1698377680203">
         <label for="number-1698377680203" class="formbuilder-number-label">ISBN</label>
-        <input type="number" class="form-control" name="number-1698377680203" access="false" id="number-1698377680203">
+        <input type="number" class="form-control" name="number-1698377680203" access="false" id="isbn-input">
     </div>
     <div class="formbuilder-text form-group field-text-1698377665406">
         <label for="text-1698377665406" class="formbuilder-text-label">Title</label>
-        <input type="text" class="form-control" name="text-1698377665406" access="false" id="text-1698377665406">
+        <input type="text" class="form-control" name="text-1698377665406" access="false" id="title-input">
     </div>
     <div class="formbuilder-text form-group field-text-1698377739790">
         <label for="text-1698377739790" class="formbuilder-text-label">Author</label>
-        <input type="text" class="form-control" name="text-1698377739790" access="false" id="text-1698377739790">
+        <input type="text" class="form-control" name="text-1698377739790" access="false" id="author-input">
     </div>
     <div class="formbuilder-number form-group field-number-1698377787692">
         <label for="number-1698377787692" class="formbuilder-number-label">Edition</label>
-        <input type="number" class="form-control" name="number-1698377787692" access="false" id="number-1698377787692">
+        <input type="number" class="form-control" name="number-1698377787692" access="false" id="edition-input">
     </div>
     <div class="formbuilder-number form-group field-number-1698377850989">
         <label for="number-1698377850989" class="formbuilder-number-label">Quantity</label>
-        <input type="number" class="form-control" name="number-1698377850989" access="false" id="number-1698377850989">
+        <input type="number" class="form-control" name="number-1698377850989" access="false" id="quantity-input">
     </div>
     <div class="formbuilder-text form-group field-text-1698377876215">
         <label for="text-1698377876215" class="formbuilder-text-label">Subject</label>
-        <input type="text" class="form-control" name="text-1698377876215" access="false" id="text-1698377876215">
+        <input type="text" class="form-control" name="text-1698377876215" access="false" id="subject-input">
     </div>
     <div class="formbuilder-number form-group field-number-1698377907294">
         <label for="number-1698377907294" class="formbuilder-number-label">Status</label>
-        <input type="number" class="form-control" name="number-1698377907294" access="false" id="number-1698377907294">
+        <input type="number" class="form-control" name="number-1698377907294" access="false" id="status-input">
     </div>
     <div class="formbuilder-number form-group field-number-1698377912164">
         <label for="number-1698377912164" class="formbuilder-number-label">Price</label>
-        <input type="number" class="form-control" name="number-1698377912164" access="false" id="number-1698377912164">
+        <input type="number" class="form-control" name="number-1698377912164" access="false" id="price-input">
     </div>
     <div class="formbuilder-button form-group field-button-1698377822465">
-        <button type="button" class="btn-success btn" name="button-1698377822465" access="false" id="button-1698377822465">Add</button>
+        <button type="button" class="btn-success btn" name="button-1698377822465" access="false" id="add-book-button">Add</button>
     </div>
 </div>
 
+<button id="show-form">Create an entry</button>
 
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="./getUserInfo.js"></script>
     <script>
+
+        $('.rendered-form').hide()
+        $('#show-form').on('click', ()=>{
+        $('.rendered-form').toggle()
+
+        })
+
+
         var data = {};
         
         $('#add-book-button').on('click', ()=>{
             let arr = $('input').toArray()
             for(let i =0; i<arr.length; i++){
                 let id_text = arr[i].id
-                let col_name = id_text.split('-')[1]
+                let col_name = id_text.split('-')[0]
                 let col_value = $(`#${id_text}`).val()
                 data[col_name] = [col_value]
 
@@ -65,8 +82,8 @@
             $.ajax({
                 type:'POST',
                 data:data,
-                url: 'admin/addBook'
-            }).done((res)=>console.log(res)).fail((res)=>console.log(res))
+                url: '/admin/addBook/'
+            }).done((res)=>alert(res)).fail((res)=>console.log(res))
         })
         
     </script>

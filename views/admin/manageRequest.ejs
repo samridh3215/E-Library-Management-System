@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./table.css">
+</head>
+<body>
+
+
+    <p>Filter by</p>
+
+    <select id="approved-filter">
+        <option value="0">not approved</option>
+        <option value="1">approved</option>
+    </select>
+    <select id="returned-filter">
+        <option value="0">not returned</option>
+        <option value="1">returned</option>
+    </select>
+    <button id="filter-button">Filter</button>
+
+    <table class="minimalistBlack" id="requests-table">
+        <%- returnTable(['request_id', 'date_of_request', 'duration', 'date_of_approval', 'student_srn', 'approved_by', 'book_isbn'], data, checkBbox=true, extraFields=[], boolHeader=['approved', 'returned']) %>
+    </table>
+    <!-- <button id="update-button">Update</button> -->
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="./getUserInfo.js"></script>
+    <script src="./updateBorrowRequests.js"></script>
+    
+</body>
+</html>

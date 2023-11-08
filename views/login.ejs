@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <input type="email" id="email-field">
+        <input type="password" id="password-field">
+        <button type="submit" id="authenticate">Login</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+
+        $('#authenticate').on('click', (event)=>{
+            event.preventDefault()
+            var email = $('#email-field').val()
+            var password = $('#password-field').val()
+            $.ajax({
+                type:"POST",
+                url: "/auth/login/",
+                data: {"email":email, "password":password},
+            }).done((res)=>{
+                if(typeof res['redirect'] == 'string')
+                    window.location=res['redirect']
+                localStorage.setItem('userData', JSON.stringify(res['userData']))
+                }).fail((err)=>{console.log(err)})
+        })
+
+
+    </script>
+</body>
+</html>

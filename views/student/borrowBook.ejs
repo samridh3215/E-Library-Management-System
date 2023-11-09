@@ -12,9 +12,11 @@
 <body>
 
     <%- include('../studentNav') %>
+    <div class="table-container">
     <table class = "minimalistBlack" id="books-table">  
         <%- returnTable(['isbn', 'title', 'author', 'edition', 'quantity', 'subject', 'status', 'price'], data, checkBox=false, extraFields=['number']) %>
     </table>
+    </div>
     <button id="save-borrow" class=" btn btn-primary">Save</button>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="./getUserInfo.js"></script>

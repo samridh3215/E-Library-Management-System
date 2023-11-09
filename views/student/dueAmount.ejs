@@ -13,10 +13,11 @@
 </head>
 <body>
     <%- include('../studentNav') %>
-
+    <div class="table-container">
     <table class="minimalistBlack" id="borrow-history">
     <%- history %>
     </table>
+    </div>
     <p>*charged at 30 rupees per week</p>
     <h1>Amount to be paid: <%= amount[0].due %></h1>
 

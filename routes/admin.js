@@ -32,14 +32,14 @@ router.post('/createUser', (req, res)=>{})
 
 router.post('/addBook', (req, res)=>{
     console.log(req.body)
-    let q = `INSERT INTO book (isbn, title, author, edition, quantity, subject, status, price) values ('${req.body.isbn}','${req.body.title}','${req.body.author}','${req.body.edition}','${req.body.quantity}','${req.body.subject}','${req.body.status}','${req.body.price}')`
+    let q = `INSERT INTO book (isbn, title, author, edition, quantity, subject) values ('${req.body.isbn}','${req.body.title}','${req.body.author}','${req.body.edition}','${req.body.quantity}','${req.body.subject}')`
     try{
     connection.query(q, (err, results, fields)=>{
         console.log({q:q, "result":results, "error":err})
-        res.send("SUCCESS")
+        res.status(200).send("SUCCESS")
     })
     }catch{
-        res.errored()
+        res.status(500).send("ERROR")
     }   
 })
 
@@ -59,7 +59,7 @@ router.get('/addBook', (req, res)=>{
         if(err)
             res.send(err.sqlMessage)
         else
-            res.render('admin/addBook', {data:returnTable(['isbn', 'title', 'author', 'edition' ,'subject', 'price'], result, checkBbox=true, extraFields=false, boolHeader=['status'])})
+            res.render('admin/addBook', {data:returnTable(['isbn', 'title', 'author', 'edition' ,'subject'], result, checkBbox=false, extraFields=false, boolHeader=[])})
             
     })
 })

@@ -5,7 +5,7 @@ divElement.id = "user-info";
 // Create the button element
 const buttonElement = document.createElement("button");
 buttonElement.id = "logout-button";
-buttonElement.classList= ["btn-success","btn"]
+buttonElement.className = "btn btn-danger"
 
 buttonElement.textContent = "Logout";
 

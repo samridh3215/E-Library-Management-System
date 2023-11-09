@@ -13,8 +13,8 @@
     <%- include("../adminNav") %>
 
 
-    <p>Filter by</p>
 <div class="filter-box">
+
     <div>
     <select id="approved-filter">
         <option value="0">not approved</option>
@@ -29,9 +29,11 @@
 </div>
     <button class="btn btn-primary" id="filter-button">Filter</button>
 </div>
+<div class="table-container">
     <table class="minimalistBlack" id="requests-table">
         <%- returnTable(['request_id', 'date_of_request', 'duration', 'date_of_approval', 'student_srn', 'approved_by', 'book_isbn'], data, checkBbox=true, extraFields=[], boolHeader=['approved', 'returned']) %>
     </table>
+</div>
     <!-- <button id="update-button">Update</button> -->
 
 

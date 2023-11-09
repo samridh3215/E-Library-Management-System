@@ -3,9 +3,31 @@ let ejs = require('ejs')
 const router = express.Router()
 var mysql = require('mysql')
 const returnTable = require('../utils/returnTable')
-
+const multer = require('multer')
+const fs = require('fs')
 
 const connection = require('../sql-connection')
+const { result } = require('lodash')
+
+const adminNav = [
+    {"/admin/addbook":"Add Book"},
+    {"/admin/logs":"View Logs"},
+    {"/admin/manageRequest":"Manage Requests"},
+    {"/admin/viewBalance":"View Balance"},
+    {"/admin/addPaper":"Add Paper"},
+]
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../uploads/'); // Set the folder where uploaded files will be stored
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname); // Use the original filename for the uploaded file
+    }
+});
+
+const upload = multer({ storage: storage });
+
 router.post('/createUser', (req, res)=>{})
 
 router.post('/addBook', (req, res)=>{
@@ -123,11 +145,32 @@ router.get('/addPaper', (req, res)=>{
     })
 })
 
-router.post('/addPapers', (req, res)=>{
-    console.log(req.body)
-    let name = req.body.name
-    let author = req.body.author
-    let q = `insert into research_paper`
+router.post('/addPapers',upload.single('file'), (req, res)=>{
+    let name = req.body.data.name
+    let author = req.body.data.author
+    let file = req.body.data.file[0]
+    const uploadedFilePath = file
+    let user = JSON.parse(req.body['userInfo'])
+    let q = `INSERT INTO research_paper (name, author, upload_date, uploaded_by) values ('${name}', '${author}', NOW(), '${user['ID']}')`
+    fs.readFile(uploadedFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading the file:', err);
+            return res.status(500).send('Error reading the file');
+        }    
+        connection.query(q, (err, result, fields)=>{
+            console.log(err, result)
+            if(err){
+                res.send(err.sqlMessage)
+            }
+            else{
+    
+                res.send(data)
+            }
+    
+        })
+
+    });
+
 })
 
 router.get('/addAccount', (req, res)=>{})

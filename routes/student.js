@@ -5,14 +5,42 @@ var mysql = require('mysql')
 const returnTable = require('../utils/returnTable')
 const connection = require('../sql-connection')
 const { rest, result } = require('lodash')
+const returnNav = require('../utils/returnNav')
 
 const pricePerWeek = 30;
+
+const studentNav = [
+    {"/student/borrowBook":"Borrow a book"},
+    {"/student/resourcePage":"View resource"},
+    {"/student/dueAmount":"View due amount"},
+]
 
 router.get('/', (req, res)=>{
     res.render('student/studentMenu')
 })
 
 router.get('/dueAmount', (req, res)=>{
+    let q = `SELECT * FROM borrow_request ;`
+    connection.query(q, (err1, result1, field)=>{
+        if(!err1){
+            connection.query(`select sum(amount) as due from balance;`, (err2, result2, field)=>{
+                if(!err2){
+                    console.log(result2)
+                    res.render('student/dueAmount', {amount:result2, history:returnTable(['request_id', 'date_of_request', 'duration', 'book_isbn'], result1, true, [], ['approved', 'returned'])})
+                }
+                else{
+                    res.send(err2.sqlMessage)
+                }
+            })
+        }
+        else{
+            res.send(err1.sqlMessage)
+        }
+    })
+})
+
+router.post('/dueAmount', (req, res)=>{
+    const user = JSON.parse(req.body['userInfo'])
     let q = `SELECT * FROM borrow_request where  student_srn='${user['ID']}';`
     connection.query(q, (err1, result1, field)=>{
         if(!err1){

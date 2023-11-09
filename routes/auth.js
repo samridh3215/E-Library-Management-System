@@ -4,6 +4,19 @@ const mysql = require('mysql')
 const bcrypt = require('bcrypt')
 const connection = require('../sql-connection')
 const { render } = require('ejs')
+const adminNav = [
+    {"/admin/addbook":"Add Book"},
+    {"/admin/logs":"View Logs"},
+    {"/admin/manageRequest":"Manage Requests"},
+    {"/admin/viewBalance":"View Balance"},
+    {"/admin/addPaper":"Add Paper"},
+]
+
+const studentNav = [
+    {"/student/borrowBook":"Borrow a book"},
+    {"/student/resourcePage":"View resource"},
+    {"/student/dueAmount":"View due amount"},
+]
 
 router.post('/signup', (req, res)=>{
     let email = req.body.email
@@ -45,9 +58,9 @@ router.post('/login', (req, res)=>{
                     console.log(data)
                     if(bcrypt.compareSync(password, data.password)){
                         if(parseInt(data.type) == 1)
-                            res.send({"redirect":"/admin/", "userData":data})
+                            res.send({"redirect":"/admin/", "userData":data, "nav":adminNav})
                         else
-                            res.send({"redirect":"/student/", "userData":data})
+                            res.send({"redirect":"/student/", "userData":data, "nav":studentNav})
                     }
                     else{
                         res.send("Wrong credentials")

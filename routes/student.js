@@ -5,15 +5,10 @@ var mysql = require('mysql')
 const returnTable = require('../utils/returnTable')
 const connection = require('../sql-connection')
 const { rest, result } = require('lodash')
-const returnNav = require('../utils/returnNav')
+const returnTableWithLinks = require('../utils/returnTableWithLinks')
+const path = require('path')
 
 const pricePerWeek = 30;
-
-const studentNav = [
-    {"/student/borrowBook":"Borrow a book"},
-    {"/student/resourcePage":"View resource"},
-    {"/student/dueAmount":"View due amount"},
-]
 
 router.get('/', (req, res)=>{
     res.render('student/studentMenu')
@@ -68,10 +63,16 @@ router.get('/borrowBook', (req, res)=>{
 })
 
 router.get('/resourcePage', (req, res)=>{
-    q = 'SELECT * from resource;'
+    q = 'SELECT * from research_paper;'
     connection.query(q, (err, result, field)=>{
-        res.render('student/resourcePage',{data:result})
+
+        res.render('student/resourcePage',{data:returnTableWithLinks(['paper_id', 'name','author', 'upload_date'], result, 'research')})
     })
+})
+
+router.get('/resource/:slug', (req, res)=>{
+    const slug = req.params.slug
+    res.sendFile(path.join(__dirname, `../uploads/${slug}.pdf`))
 })
 
 router.post('/updateBorrow', (req, res) => {

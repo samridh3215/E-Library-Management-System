@@ -14,7 +14,7 @@
     <%- include('../studentNav') %>
     <div class="table-container">
     <table class = "minimalistBlack" id="books-table">  
-        <%- returnTable(['isbn', 'title', 'author', 'edition', 'quantity', 'subject', 'status', 'price'], data, checkBox=false, extraFields=['number']) %>
+        <%- returnTable(['isbn', 'title', 'author', 'edition', 'quantity', 'subject', 'status', 'price'], data, checkBox=false, extraFields=[['number', `placheholder='Duration(in days)' style='border-radius:10px;'`]]) %>
     </table>
     </div>
     <button id="save-borrow" class=" btn btn-primary">Save</button>

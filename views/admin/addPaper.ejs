@@ -41,8 +41,19 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="./getUserInfo.js"></script>
     <script>
-        var data = {};
-        
+
+        document.getElementById('file-input').addEventListener('change', async function(event) {
+            const selectedFile = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+              const pdfAsDataURL = event.target.result;
+              data['dataURL']=pdfAsDataURL
+            }
+            reader.readAsDataURL(selectedFile)
+        })
+
+        var data = {}
         $('#add-paper-button').on('click', ()=>{
             let arr = $('input').toArray()
             for(let i =0; i<arr.length; i++){
@@ -50,14 +61,14 @@
                 let col_name = id_text.split('-')[0]
                 let col_value = $(`#${id_text}`).val()
                 data[col_name] = [col_value]
-
             }
+
             console.log(data)
             $.ajax({
                 type:'POST',
                 data:{data:data, userInfo:localStorage.getItem('userData')},
                 url: '/admin/addPapers'
-            }).done((res)=>console.log(res)).fail((res)=>console.log(res))
+            }).done((res)=>alert(res)).fail((res)=>console.log(res))
         })
         
     </script>

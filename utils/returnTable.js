@@ -28,8 +28,8 @@ function returnTable(headers, data, checkBox=false,extraFields=[], boolHeader=[]
             })
         }
         if(extraFields!=[]){
-            extraFields.forEach(field=>{
-                dataString = dataString + `<td><input type="${field}" id="${element[headers[0]]+'-'+field}"></td>`
+            extraFields.forEach(([field, extra])=>{
+                dataString = dataString + `<td><input ${extra} type="${field}" id="${element[headers[0]]+'-'+field}"></td>`
             })
 
         }

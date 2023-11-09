@@ -1,8 +1,10 @@
 var changed = {}
 const Map = {'true':1, 'false':0}
+
 $('#filter-button').on('click', ()=>{
     let approved = parseInt($('#approved-filter').val())
     let returned = parseInt($('#returned-filter').val())
+    
     $.ajax({
         type:"POST",
         url: '/admin/manageRequest/',

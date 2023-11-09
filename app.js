@@ -16,6 +16,9 @@ app.use('/student', express.static('static'))
 app.use('/admin', express.static('static'))
 app.use('/auth', express.static('static'))
 
+app.use(bodyParser.text({ limit: '200mb' }));
+app.use(bodyParser.json({limit: '200mb'}));
+app.use(bodyParser.urlencoded({limit: '200mb', extended: true}));
 
 const host = '0.0.0.0'
 const port = 3001

@@ -5,9 +5,11 @@ var mysql = require('mysql')
 const returnTable = require('../utils/returnTable')
 const multer = require('multer')
 const fs = require('fs')
+const path=require('path')
 
 const connection = require('../sql-connection')
 const { result } = require('lodash')
+const writeFileToLocal = require('../utils/writeFile')
 
 const adminNav = [
     {"/admin/addbook":"Add Book"},
@@ -66,8 +68,15 @@ router.get('/addBook', (req, res)=>{
 
 router.get('/manageRequest', (req, res)=>{
     let q = 'SELECT * from borrow_request'
-    connection.query(q, (err, results, fields)=>{
-        res.render('admin/manageRequest',{"data": results, "returnTable":returnTable})
+    connection.query(q, (err, result1, fields)=>{
+        connection.query('select request_id, date_of_approval,ADDDATE(date_of_approval, duration) as deadline, student_srn  from borrow_request where NOW() > ADDDATE(date_of_approval, duration) ;', (err, result2, fields)=>{
+            if(err){
+                res.send(err.sqlMessage)
+            }
+            else{
+                res.render('admin/manageRequest',{"data": result1, newData: result2, "returnTable":returnTable})
+            }
+        })
     })
 })
 
@@ -146,32 +155,27 @@ router.get('/addPaper', (req, res)=>{
 })
 
 router.post('/addPapers',upload.single('file'), (req, res)=>{
+    console.log(req.body)
     let name = req.body.data.name
     let author = req.body.data.author
-    let file = req.body.data.file[0]
-    const uploadedFilePath = file
+    let dataURL = req.body.data['dataURL']
     let user = JSON.parse(req.body['userInfo'])
     let q = `INSERT INTO research_paper (name, author, upload_date, uploaded_by) values ('${name}', '${author}', NOW(), '${user['ID']}')`
-    fs.readFile(uploadedFilePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading the file:', err);
-            return res.status(500).send('Error reading the file');
-        }    
         connection.query(q, (err, result, fields)=>{
             console.log(err, result)
             if(err){
                 res.send(err.sqlMessage)
             }
             else{
-    
-                res.send(data)
+                writeFileToLocal('research', result['insertId'], dataURL)
+                res.send("SUCCESS")
             }
     
         })
 
     });
 
-})
+
 
 router.get('/addAccount', (req, res)=>{})
 

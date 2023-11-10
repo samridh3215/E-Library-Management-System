@@ -3,7 +3,6 @@ let ejs = require('ejs')
 const router = express.Router()
 var mysql = require('mysql')
 const returnTable = require('../utils/returnTable')
-const multer = require('multer')
 const fs = require('fs')
 const path=require('path')
 
@@ -19,21 +18,10 @@ const adminNav = [
     {"/admin/addPaper":"Add Paper"},
 ]
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, '../uploads/'); // Set the folder where uploaded files will be stored
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname); // Use the original filename for the uploaded file
-    }
-});
-
-const upload = multer({ storage: storage });
 
 router.post('/createUser', (req, res)=>{})
 
 router.post('/addBook', (req, res)=>{
-    console.log(req.body)
     let q = `INSERT INTO book (isbn, title, author, edition, quantity, subject) values ('${req.body.isbn}','${req.body.title}','${req.body.author}','${req.body.edition}','${req.body.quantity}','${req.body.subject}')`
     try{
     connection.query(q, (err, results, fields)=>{
@@ -154,7 +142,7 @@ router.get('/addPaper', (req, res)=>{
     })
 })
 
-router.post('/addPapers',upload.single('file'), (req, res)=>{
+router.post('/addPapers', (req, res)=>{
     console.log(req.body)
     let name = req.body.data.name
     let author = req.body.data.author

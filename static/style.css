@@ -86,12 +86,14 @@ a{
 }
 
 .left-split{
-    background-color: #2ebfbe;
     width:140%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: url('./90df22ab443662d632838fd82f6ea38b2cba025a.png');
+    background-size:100%;
+    background-position: 5%;
 }
 
 .right-split{
